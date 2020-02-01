@@ -1,6 +1,5 @@
 package com.example.android.videomvi.views
 
-
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import com.example.android.videomvi.models.PlayerSettings
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -23,9 +21,6 @@ import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
 
 
-/**
- * A simple [Fragment] subclass.
- */
 class PlayerFragment : Fragment() {
 
     private val args: PlayerFragmentArgs by navArgs()
@@ -129,5 +124,4 @@ class PlayerFragment : Fragment() {
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
     }
-
 }
