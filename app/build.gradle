@@ -60,6 +60,21 @@ dependencies {
     // exoplayer
     implementation deps.exoPlayer
 
+    // moshi
+    implementation deps.moshi.base
+    implementation deps.moshi.kotlin
+    kapt deps.moshi.codegen
+
+    // retrofit2
+    implementation deps.retrofit2.base
+    implementation deps.retrofit2.moshiConverter
+    implementation deps.retrofit2.coroutines
+
+    // coroutines
+    implementation deps.coroutines.core
+    implementation deps.coroutines.android
+    testImplementation deps.coroutines.test
+
     // junit
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation deps.jUnit
