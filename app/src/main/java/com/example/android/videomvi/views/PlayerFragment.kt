@@ -10,12 +10,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.android.videomvi.R
 import com.example.android.videomvi.models.PlayerSettings
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
@@ -24,13 +27,17 @@ import kotlinx.android.synthetic.main.fragment_player.view.*
 class PlayerFragment : Fragment() {
 
     private val args: PlayerFragmentArgs by navArgs()
+    private val TAG = this.javaClass.simpleName
 
     private var player: SimpleExoPlayer? = null
     private var playerSettings = PlayerSettings()
+    private lateinit var playbackListener: PlaybackStateListener
 
-
+    // region lifecycle methods
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_player, container, false)
+
+        playbackListener = PlaybackStateListener()
 
         view.back_button.setOnClickListener {
             // use navigateUp to go back, to avoid growing backstack & creating new HomeFragment instances
@@ -76,6 +83,7 @@ class PlayerFragment : Fragment() {
             releasePlayer()
         }
     }
+    // endregion
 
     private fun initializePlayer(){
         if (player == null) {
@@ -89,6 +97,7 @@ class PlayerFragment : Fragment() {
         exoplayer_view.player = player
         val mediaSource = getMediaSource()
 
+        player?.addListener(playbackListener)
         player?.playWhenReady = playerSettings.playWhenReady
         player?.seekTo(playerSettings.currentWindow, playerSettings.playbackPosition)
         // don't reset position or state, since those have been set in 2 lines above
@@ -110,6 +119,7 @@ class PlayerFragment : Fragment() {
                                 playbackPosition = player?.currentPosition ?: 0,
                                 currentWindow = player?.currentWindowIndex ?: 0
                             )
+            player?.removeListener(playbackListener)
             player?.release()
             player = null
         }
@@ -123,5 +133,20 @@ class PlayerFragment : Fragment() {
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+    }
+
+    inner class PlaybackStateListener : Player.EventListener {
+        override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+            var stateString: String = ""
+            when (playbackState) {
+                ExoPlayer.STATE_IDLE -> stateString = "ExoPlayer.STATE_IDLE"
+                ExoPlayer.STATE_BUFFERING -> stateString = "ExoPlayer.STATE_BUFFERING"
+                ExoPlayer.STATE_READY -> stateString = "ExoPlayer.STATE_READY"
+                ExoPlayer.STATE_ENDED -> stateString = "ExoPlayer.STATE_ENDED"
+                else -> stateString = "State.UNKNOWN"
+            }
+
+            Log.d(TAG, "State changed to $stateString, playWhenReady is $playWhenReady")
+        }
     }
 }
