@@ -20,12 +20,13 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        view.play_audio_button.isEnabled = false
         view.play_audio_button.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPlayerFragment(getString(R.string.media_url_mp3)))
         }
 
         view.play_video_button.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPlayerFragment(getString(R.string.media_url_mp4)))
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPlayerFragment(getString(R.string.media_url_dash)))
         }
 
         return view

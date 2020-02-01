@@ -15,6 +15,8 @@ import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.dash.DashMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.fragment_player.*
@@ -61,7 +63,7 @@ class PlayerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         hideSystemUI()
-        if (Util.SDK_INT < 24 || player == null) {
+        if (Util.SDK_INT < 24) {
             initializePlayer()
         }
     }
@@ -81,9 +83,15 @@ class PlayerFragment : Fragment() {
     }
 
     private fun initializePlayer(){
-        player = ExoPlayerFactory.newSimpleInstance(activity?.baseContext)
-        exoplayer_view.player = player
+        if (player == null) {
+            // select track according to bandwidth
+            // play adaptive streaming source using trackSelector
+            val trackSelector = DefaultTrackSelector()
+            trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd())
+            player = ExoPlayerFactory.newSimpleInstance(activity?.baseContext, trackSelector)
+        }
 
+        exoplayer_view.player = player
         val mediaSource = getMediaSource()
 
         player?.playWhenReady = playerSettings.playWhenReady
@@ -96,7 +104,8 @@ class PlayerFragment : Fragment() {
         val uri = Uri.parse(args.mediaUrl)
         val dataSourceFactory = DefaultDataSourceFactory(activity?.baseContext, getString(R.string.exoplayer))
 
-        return ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+        // mediaUrl -> DASH - adaptive streaming format
+        return DashMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
     }
 
     private fun releasePlayer() {
