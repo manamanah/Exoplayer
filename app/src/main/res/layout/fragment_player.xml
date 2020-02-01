@@ -7,15 +7,32 @@
     android:layout_height="match_parent"
     tools:context=".views.PlayerFragment">
 
+    <FrameLayout
+        android:id="@+id/exoplayer_frame"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/spacing_auto"
+        android:background="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/back_button">
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/exoplayer_view"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+    </FrameLayout>
+
     <Button
         android:id="@+id/back_button"
         android:layout_width="@dimen/spacing_auto"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_default"
+        android:layout_margin="0dp"
         android:text="@string/back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/exoplayer_frame"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
