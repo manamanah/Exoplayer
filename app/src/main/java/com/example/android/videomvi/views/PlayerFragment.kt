@@ -137,13 +137,12 @@ class PlayerFragment : Fragment() {
 
     inner class PlaybackStateListener : Player.EventListener {
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-            var stateString: String = ""
-            when (playbackState) {
-                ExoPlayer.STATE_IDLE -> stateString = "ExoPlayer.STATE_IDLE"
-                ExoPlayer.STATE_BUFFERING -> stateString = "ExoPlayer.STATE_BUFFERING"
-                ExoPlayer.STATE_READY -> stateString = "ExoPlayer.STATE_READY"
-                ExoPlayer.STATE_ENDED -> stateString = "ExoPlayer.STATE_ENDED"
-                else -> stateString = "State.UNKNOWN"
+            val stateString = when (playbackState) {
+                ExoPlayer.STATE_IDLE -> "ExoPlayer.STATE_IDLE"
+                ExoPlayer.STATE_BUFFERING -> "ExoPlayer.STATE_BUFFERING"
+                ExoPlayer.STATE_READY -> "ExoPlayer.STATE_READY"
+                ExoPlayer.STATE_ENDED -> "ExoPlayer.STATE_ENDED"
+                else -> "State.UNKNOWN"
             }
 
             Log.d(TAG, "State changed to $stateString, playWhenReady is $playWhenReady")
