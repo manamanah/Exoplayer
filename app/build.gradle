@@ -57,6 +57,9 @@ dependencies {
     implementation deps.navigation.fragment
     implementation deps.navigation.uiKtx
 
+    // exoplayer
+    implementation deps.exoPlayer
+
     // junit
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation deps.jUnit
