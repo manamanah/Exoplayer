@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- exoplayer controller timeouts -->
+    <integer name="controller_timeout_Ms">10000</integer>
+    <integer name="fastforward_timeMs">30000</integer>
+    <integer name="rewind_timeMs">30000</integer>
+</resources>

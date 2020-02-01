@@ -20,7 +20,10 @@
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/exoplayer_view"
             android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent"
+            app:show_timeout="@integer/controller_timeout_Ms"
+            app:fastforward_increment="@integer/fastforward_timeMs"
+            app:rewind_increment="@integer/rewind_timeMs"/>
 
     </FrameLayout>
 
