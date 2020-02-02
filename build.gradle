@@ -12,6 +12,7 @@ buildscript {
             'jUnit' : "4.13",
             'jUnitTest' : "1.1.1",
             'lifecycle' : "2.2.0",
+            'moshi' : '1.9.2',
             'nav' : "2.2.0"
         ]
 
@@ -33,6 +34,12 @@ buildscript {
                     'liveData' : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
                     'reactiveStreams' : "androidx.lifecycle:lifecycle-reactivestreams-ktx:${versions.lifecycle}",
                     'viewModel' : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}"
+                ],
+            'moshi' :
+                [
+                    'base': "com.squareup.moshi:moshi:${versions.moshi}",
+                    'kotlin' : "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
+                    'codegen' : "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi}"
                 ],
             'navigation' :
                 [

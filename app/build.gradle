@@ -60,6 +60,12 @@ dependencies {
     // exoplayer
     implementation deps.exoPlayer
 
+    // moshi
+    // moshi
+    implementation deps.moshi.base
+    implementation deps.moshi.kotlin
+    kapt deps.moshi.codegen
+
     // junit
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation deps.jUnit
