@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="spacing_default">8dp</dimen>
     <dimen name="spacing_auto">0dp</dimen>
+    <dimen name="spacing_half">4dp</dimen>
+    <dimen name="spacing_default">8dp</dimen>
+    <dimen name="spacing_double">16dp</dimen>
+
+    <!-- fontsizes -->
+    <dimen name="header">26sp</dimen>
+    <dimen name="title">22sp</dimen>
+    <dimen name="subtitle">20sp</dimen>
+    <dimen name="description">18sp</dimen>
 </resources>
