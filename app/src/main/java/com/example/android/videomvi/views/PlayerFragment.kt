@@ -9,14 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.android.videomvi.R
-import com.example.android.videomvi.models.PlayerSettings
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.example.android.videomvi.models.LoadControlConfig
+import com.example.android.videomvi.models.PlayerViewConfig
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.Util
@@ -30,7 +29,7 @@ class PlayerFragment : Fragment() {
     private val TAG = this.javaClass.simpleName
 
     private var player: SimpleExoPlayer? = null
-    private var playerSettings = PlayerSettings()
+    private var playerConfig = PlayerViewConfig()
     private lateinit var playbackListener: PlaybackStateListener
 
     // region lifecycle methods
@@ -43,6 +42,8 @@ class PlayerFragment : Fragment() {
             // use navigateUp to go back, to avoid growing backstack & creating new HomeFragment instances
             findNavController().navigateUp()
         }
+
+        applyPlayerConfigs(view.exoplayer_view)
 
         // Inflate the layout for this fragment
         return view
@@ -85,21 +86,45 @@ class PlayerFragment : Fragment() {
     }
     // endregion
 
+    /**
+     * Set different time-values for playerView
+     */
+    private fun applyPlayerConfigs(playerView: PlayerView) {
+        playerView.setFastForwardIncrementMs(playerConfig.fastForwardIncrement.mS)
+        playerView.setRewindIncrementMs(playerConfig.rewindIncrement.mS)
+        playerView.controllerShowTimeoutMs = playerConfig.timeOut.mS
+    }
+
     private fun initializePlayer(){
         if (player == null) {
             // select track according to bandwidth
             // play adaptive streaming source using trackSelector
             val trackSelector = DefaultTrackSelector()
             trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd())
-            player = ExoPlayerFactory.newSimpleInstance(activity?.baseContext, trackSelector)
+
+            // LoadControl
+            val loadControl = DefaultLoadControl.Builder()
+                .setBufferDurationsMs(
+                    LoadControlConfig.minBufferDuration.mS,
+                    LoadControlConfig.maxBufferDuration.mS,
+                    LoadControlConfig.minPlaybackStartBuffer.mS,
+                    LoadControlConfig.minPlaybackResumeBuffer.mS
+                    )
+                .createDefaultLoadControl()
+
+            player = ExoPlayerFactory.newSimpleInstance(
+                activity?.baseContext,
+                trackSelector,
+                loadControl
+            )
         }
 
         exoplayer_view.player = player
         val mediaSource = getMediaSource()
 
         player?.addListener(playbackListener)
-        player?.playWhenReady = playerSettings.playWhenReady
-        player?.seekTo(playerSettings.currentWindow, playerSettings.playbackPosition)
+        player?.playWhenReady = playerConfig.playWhenReady
+        player?.seekTo(playerConfig.currentWindow, playerConfig.playbackPosition)
         // don't reset position or state, since those have been set in 2 lines above
         player?.prepare(mediaSource, false, false)
     }
@@ -114,7 +139,7 @@ class PlayerFragment : Fragment() {
 
     private fun releasePlayer() {
         if (player != null) {
-            playerSettings = playerSettings.copy(
+            playerConfig = playerConfig.copy(
                                 playWhenReady = player?.playWhenReady ?: true,
                                 playbackPosition = player?.currentPosition ?: 0,
                                 currentWindow = player?.currentWindowIndex ?: 0
