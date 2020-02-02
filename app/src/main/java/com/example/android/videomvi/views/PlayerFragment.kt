@@ -13,6 +13,7 @@ import com.example.android.videomvi.models.LoadControlConfig
 import com.example.android.videomvi.models.PlayerViewConfig
 import com.example.android.videomvi.utils.createDataSourceFactory
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
@@ -28,7 +29,7 @@ import java.lang.IllegalStateException
 
 class PlayerFragment : Fragment() {
 
-    private val args: PlayerFragmentArgs by navArgs()
+    private val selectionArgs: PlayerFragmentArgs by navArgs()
     private val TAG = this.javaClass.simpleName
 
     private var player: SimpleExoPlayer? = null
@@ -133,19 +134,29 @@ class PlayerFragment : Fragment() {
     }
 
     private fun getMediaSource(): MediaSource {
-        val uri = Uri.parse(args.mediaUrl)
-        val dataSourceFactory = createDataSourceFactory(
-                                                        activity?.baseContext,
-                                                        getString(R.string.exoplayer)
-                                                    )
 
-        return when (val contentType = Util.inferContentType(uri)) {
-            C.TYPE_DASH -> DashMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
-            C.TYPE_HLS -> HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
-            C.TYPE_SS -> throw IllegalStateException("SmoothStreaming is not supported.")
-            C.TYPE_OTHER -> ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
-            else -> throw IllegalStateException("Unsupported type: $contentType")
+        val mediaSourceList = mutableListOf<MediaSource>()
+
+        selectionArgs.videos.forEach {url ->
+            val uri = Uri.parse(url)
+            val dataSourceFactory = createDataSourceFactory(
+                activity?.baseContext,
+                getString(R.string.exoplayer)
+            )
+
+            val mediaSource = when (val contentType = Util.inferContentType(uri)) {
+                C.TYPE_DASH -> DashMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+                C.TYPE_HLS -> HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+                C.TYPE_SS -> throw IllegalStateException("SmoothStreaming is not supported.")
+                C.TYPE_OTHER -> ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
+                else -> throw IllegalStateException("Unsupported type: $contentType")
+            }
+
+            mediaSourceList.add(mediaSource)
         }
+
+        // use spread operator to unpack array to list of MediaSource values
+        return ConcatenatingMediaSource(true, *mediaSourceList.toTypedArray())
     }
 
     private fun releasePlayer() {

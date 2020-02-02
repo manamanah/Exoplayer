@@ -19,8 +19,7 @@
         android:label="fragment_player"
         tools:layout="@layout/fragment_player" >
         <argument
-            android:name="mediaUrl"
-            app:argType="string"
-            android:defaultValue='""' />
+            android:name="videos"
+            app:argType="string[]" />
     </fragment>
 </navigation>
