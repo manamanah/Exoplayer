@@ -11,20 +11,22 @@
         android:id="@+id/videolist_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_double"
+        android:layout_marginTop="@dimen/spacing_default"
+        android:layout_marginBottom="@dimen/spacing_default"
         android:text="@string/videoList"
         android:textSize="@dimen/header"
         android:textStyle="bold"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/videolist_recycler"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/videolist_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_double"
+        android:layout_height="@dimen/spacing_auto"
+        android:background="@color/recycler_BG"
         tools:itemCount="5"
         tools:listitem="@layout/video"
         app:layout_constraintStart_toStartOf="parent"

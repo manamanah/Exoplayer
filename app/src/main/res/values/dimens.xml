@@ -5,9 +5,11 @@
     <dimen name="spacing_default">8dp</dimen>
     <dimen name="spacing_double">16dp</dimen>
 
-    <!-- fontsizes -->
+    <dimen name="divider_height">2dp</dimen>
+
+    <!-- font sizes -->
     <dimen name="header">26sp</dimen>
-    <dimen name="title">22sp</dimen>
-    <dimen name="subtitle">20sp</dimen>
-    <dimen name="description">18sp</dimen>
+    <dimen name="title">20sp</dimen>
+    <dimen name="subtitle">16sp</dimen>
+    <dimen name="description">14sp</dimen>
 </resources>
