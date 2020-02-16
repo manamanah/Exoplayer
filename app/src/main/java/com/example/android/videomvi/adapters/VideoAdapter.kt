@@ -3,6 +3,8 @@ package com.example.android.videomvi.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.videomvi.R
 import com.example.android.videomvi.databinding.VideoBinding
@@ -11,7 +13,9 @@ import kotlinx.android.synthetic.main.video.view.*
 
 class VideoAdapter(private val videoList: List<Video>) : RecyclerView.Adapter<VideoAdapter.ViewHolder>() {
 
-    val selectedVideos = mutableListOf<String>()
+    val _selectedVideos : MutableLiveData<MutableList<String>> = MutableLiveData(mutableListOf())
+    val selectedVideos : LiveData<MutableList<String>>
+        get() = _selectedVideos
 
     override fun getItemCount(): Int = videoList.size
 
@@ -37,10 +41,12 @@ class VideoAdapter(private val videoList: List<Video>) : RecyclerView.Adapter<Vi
                 // set background color if clicked and add/remove to selected videoList
                 if (binding.root.description.isVisible) {
                     binding.videoItem.setBackgroundColor(binding.root.resources.getColor(R.color.video_BG_selected))
-                    selectedVideos.add(videoItem.url)
+                    _selectedVideos.value?.add(videoItem.url)
+                    _selectedVideos.postValue(_selectedVideos.value)
                 } else {
                     binding.videoItem.setBackgroundColor(binding.root.resources.getColor(R.color.video_BG))
-                    selectedVideos.remove(videoItem.url)
+                    _selectedVideos.value?.remove(videoItem.url)
+                    _selectedVideos.postValue(_selectedVideos.value)
                 }
             }
         }

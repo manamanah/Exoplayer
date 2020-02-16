@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.android.videomvi.R
@@ -42,13 +43,27 @@ class HomeFragment : Fragment() {
             // select video and deliver url as args
             // also option to play all
             view.play_video_button.setOnClickListener {
-                val selectedVideo = videoAdapter.selectedVideos.toTypedArray()
+                val selectedVideo = videoAdapter.selectedVideos.value?.toTypedArray() ?: arrayOf()
+
                 findNavController()
                     .navigate(HomeFragmentDirections.actionHomeFragmentToPlayerFragment(selectedVideo))
             }
         } else {
             Log.e(this.javaClass.simpleName, "VideoList was NULL")
         }
+
+        videoAdapter._selectedVideos.observe(viewLifecycleOwner, Observer { list ->
+            when {
+                list.isEmpty() -> {
+                    view.play_video_button.isEnabled = false
+                    view.play_video_button.text = getString(R.string.select_button_fallback_text)
+                }
+                else -> {
+                    view.play_video_button.isEnabled = true
+                    view.play_video_button.text = getString(R.string.select_button_default_text)
+                }
+            }
+        })
 
         return view
     }

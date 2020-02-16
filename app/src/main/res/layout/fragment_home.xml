@@ -39,7 +39,7 @@
         android:layout_width="@dimen/spacing_auto"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_default"
-        android:text="@string/play_video"
+        android:text="@string/select_button_default_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/videolist_recycler"
