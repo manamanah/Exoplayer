@@ -88,6 +88,23 @@ class PlayerFragment : Fragment() {
             releasePlayer()
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        
+        outState.putInt(getString(R.string.currentVideoWindow), player?.currentWindowIndex ?: 0)
+        outState.putLong(getString(R.string.currentPlaybackPosition), player?.currentPosition ?: 0)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            val currentPos = savedInstanceState.getLong(getString(R.string.currentPlaybackPosition))
+            val currentWindowIndex = savedInstanceState.getInt(getString(R.string.currentVideoWindow))
+            playerConfig = playerConfig.copy(currentWindow =  currentWindowIndex, playbackPosition = currentPos)
+        }
+    }
     // endregion
 
     /**
